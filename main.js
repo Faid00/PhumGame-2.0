@@ -739,6 +739,15 @@ document.addEventListener('DOMContentLoaded', function() {
     // ========================================================================
     document.addEventListener('click', function(e) {
         if (e.target.classList.contains('add-to-cart-btn')) {
+            // Check if user is logged in
+            if (!Auth.isLoggedIn()) {
+                Cart.showNotification('⚠️ Please log in to add items to your cart');
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 1500);
+                return;
+            }
+
             const productId = parseInt(e.target.getAttribute('data-product-id'));
             const product = ProductSearch.products.find(p => p.id === productId);
             
@@ -835,10 +844,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (buyNowBtn) {
         buyNowBtn.addEventListener('click', function() {
+            // Check if user is logged in
+            if (!Auth.isLoggedIn()) {
+                Cart.showNotification('⚠️ Please log in to make a purchase');
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 1500);
+                return;
+            }
+
             const cart = Cart.getCart();
             
             if (cart.length === 0) {
-                alert('Your cart is empty. Please add games before purchasing.');
+                Cart.showNotification('⚠️ Your cart is empty. Please add games first');
                 return;
             }
 
